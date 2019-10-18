@@ -12,7 +12,7 @@ RUN conda install --name base --quiet --yes \
     pip=19.2.* \
     python=3.7.4 \
     && pip install --no-cache-dir \
-    meinheld==0.6.*
+    meinheld==1.0.*
 
 # remove unneeded environment
 RUN apt-get remove --purge --autoremove --yes \
