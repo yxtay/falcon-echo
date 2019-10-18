@@ -1,0 +1,13 @@
+name: falcon-echo
+channels:
+- default
+dependencies:
+- grpcio=1.16.*
+- gunicorn=19.9.*
+- pip=19.2.*
+- python=3.7.4
+- pip:
+  - falcon==2.0.*
+  - meinheld==0.6.*
+  - opencensus-ext-stackdriver==0.7.*
+  - python-json-logger==0.1.*
