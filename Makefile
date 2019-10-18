@@ -45,4 +45,8 @@ docker-stop:
 docker-rmi:
 	docker rmi \
 	$(shell docker images -q $(IMAGE_REGISTRY)/$(APP_NAME))
+
+.PHONY: docker-push
+docker-push:
+	docker push $(IMAGE_REGISTRY)/$(APP_NAME):latest
 ### End Docker build and register scope

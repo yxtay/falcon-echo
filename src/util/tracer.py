@@ -55,10 +55,10 @@ def get_function_name(func):
 
 
 @contextmanager
-def start_trace_span(suffix="", child_of=None, span_name=None, f_back=3):
+def start_trace_span(suffix="", span_name=None, f_back=3):
     span_name = get_frame_name(f_back) if span_name is None else span_name
     span_name = span_name + suffix
-    with get_opencensus_tracer().span(span_name, child_of) as scope:
+    with get_opencensus_tracer().span(span_name) as scope:
         yield scope
 
 

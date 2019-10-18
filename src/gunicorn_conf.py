@@ -1,3 +1,5 @@
+import os
+
 # debugging
 reload = True  # default: False
 
@@ -5,7 +7,8 @@ reload = True  # default: False
 loglevel = "error"
 
 # server socket
-bind = [":80"]  # default: ['127.0.0.1:8000']
+port = os.getenv("PORT", 80)
+bind = [":{port}".format(port=port)]  # default: ['127.0.0.1:8000']
 backlog = 2048  # default: 2048
 
 # worker processes
