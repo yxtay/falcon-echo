@@ -3,7 +3,7 @@ import json
 import falcon
 
 from src.request import Request
-from src.util.misc import get_error_resp, get_falcon_resp
+from src.util.misc import get_falcon_resp
 from src.util.tracer import init_tracer
 
 
@@ -29,23 +29,15 @@ class EchoResource(object):
     def on_get(self, req, resp):
         tracer = init_tracer()
         with tracer.span(req.uri):
-            try:
-                request = Request.from_falcon_req(req)
-                get_falcon_resp(resp, request.attributes)
-
-            except Exception as e:
-                get_error_resp(resp, e)
+            request = Request.from_falcon_req(req)
+            get_falcon_resp(resp, request.attributes)
 
         tracer.finish()
 
     def on_post(self, req, resp):
         tracer = init_tracer()
         with tracer.span(req.uri):
-            try:
-                request = Request.from_falcon_req(req)
-                get_falcon_resp(resp, request.req_attributes)
-
-            except Exception as e:
-                get_error_resp(resp, e)
+            request = Request.from_falcon_req(req)
+            get_falcon_resp(resp, request.attributes)
 
         tracer.finish()

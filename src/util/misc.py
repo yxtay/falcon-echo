@@ -26,7 +26,7 @@ def get_falcon_resp(resp, data={}):
 
 
 @trace_function
-def get_error_resp(resp, exception):
+def get_error_resp(req, resp, exception, params):
     with get_opencensus_tracer().span(get_frame_name() + "[logger.exception]"):
         logger.exception(exception, extra={"severity": "ERROR"})
 
