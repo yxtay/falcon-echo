@@ -1,11 +1,11 @@
+import functools
 import json
 import traceback
 
 import falcon
-from opencensus.trace.execution_context import get_opencensus_tracer
 
 from src.util.logger import logger
-from src.util.tracer import get_frame_name, trace_function
+from src.util.tracer import start_trace_span, trace_function
 
 
 @trace_function
@@ -17,7 +17,7 @@ def get_falcon_resp(resp, data={}):
     }
     body.update(data)
 
-    with get_opencensus_tracer().span(get_frame_name() + "[logger.info]"):
+    with start_trace_span("[logger.info]"):
         logger.info("response body", extra={"data": body})
 
     resp.body = json.dumps(body, default=str)
@@ -26,9 +26,9 @@ def get_falcon_resp(resp, data={}):
 
 
 @trace_function
-def get_error_resp(req, resp, exception, params):
-    with get_opencensus_tracer().span(get_frame_name() + "[logger.exception]"):
-        logger.exception(exception, extra={"severity": "ERROR"})
+def get_error_resp(resp, exception):
+    with start_trace_span("[logger.exception]"):
+        logger.exception(repr(exception), extra={"severity": "ERROR"})
 
     body = {
         "status": falcon.HTTP_500,
@@ -38,3 +38,14 @@ def get_error_resp(req, resp, exception, params):
         "traceback": traceback.format_exc().strip().split("\n"),
     }
     return get_falcon_resp(resp, body)
+
+
+def add_exception_handling(func):
+    @functools.wraps(func)
+    def wrapper(self, req, resp, *args, **kwargs):
+        try:
+            func(self, req, resp, *args, **kwargs)
+        except Exception as e:
+            get_error_resp(resp, e)
+
+    return wrapper

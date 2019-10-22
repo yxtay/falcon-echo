@@ -3,12 +3,10 @@ from wsgiref import simple_server
 import falcon
 
 from src import resource
-from src.util.misc import get_error_resp
 
 
 def create_falcon_app():
     app = falcon.API()
-    app.add_error_handler(Exception, get_error_resp)
 
     app.add_route("/", resource.HealthResource())
     app.add_route("/health", resource.HealthResource())
