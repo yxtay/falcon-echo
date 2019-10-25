@@ -11,8 +11,6 @@ class HealthResource(object):
     def on_get(self, req, resp):
         body = {
             "status": falcon.HTTP_200,
-            "status_code": 200,
-            "message": "ok",
         }
         resp.body = json.dumps(body)
 

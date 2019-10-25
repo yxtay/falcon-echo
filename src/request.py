@@ -26,7 +26,7 @@ class Request(object):
     @trace_function
     def set_attributes(self, req):
         self.attributes = {
-            "uri": req.uri,
+            "url": req.url,
             "method": req.method,
             "headers": req.headers,
             "params": req.params,

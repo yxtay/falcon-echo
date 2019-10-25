@@ -12,8 +12,6 @@ from src.util.tracer import start_trace_span, trace_function
 def get_falcon_resp(resp, data={}):
     body = {
         "status": falcon.HTTP_200,
-        "status_code": 200,
-        "message": "ok",
     }
     body.update(data)
 
@@ -32,8 +30,6 @@ def get_error_resp(resp, exception):
 
     body = {
         "status": falcon.HTTP_500,
-        "status_code": 500,
-        "message": "internal server error",
         "error": repr(exception),
         "traceback": traceback.format_exc().strip().split("\n"),
     }
