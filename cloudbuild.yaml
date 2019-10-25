@@ -20,7 +20,7 @@ steps:
     - '-c'
     - |
       [[ "$BRANCH_NAME" == "master" ]] && beta run deploy ${_SERVICE_NAME} --image gcr.io/default-223103/${_IMAGE_NAME} --region us-central1 --platform managed --allow-unauthenticated
-      [[ "$BRANCH_NAME" != "master" ]] exit 0
+      [[ "$BRANCH_NAME" != "master" ]] && exit 0
 timeout: '600s'
 substitutions:
     _SERVICE_NAME: 'falcon-echo'
