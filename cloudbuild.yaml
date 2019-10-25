@@ -1,5 +1,9 @@
 steps:
-# Deploy an image from Container Registry to Cloud Run
+- name: 'python:3.7.4'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - 'pip install -r requirements.txt && pip install -r requirements-test.txt && pytest -v'
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
   args:
