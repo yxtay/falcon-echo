@@ -15,8 +15,8 @@ steps:
     - 'pip install -r requirements-test.txt && pytest -v'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/falcon-echo']
-#- name: 'gcr.io/cloud-builders/gcloud'
-#  args: ['beta', 'run', 'deploy', 'falcon-echo', '--image', 'gcr.io/$PROJECT_ID/falcon-echo', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'falcon-echo', '--image', 'gcr.io/$PROJECT_ID/falcon-echo', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
 timeout: '600s'
 images:
   - 'gcr.io/$PROJECT_ID/falcon-echo'
