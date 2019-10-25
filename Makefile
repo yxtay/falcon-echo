@@ -9,6 +9,10 @@ GOOGLE_APPLICATION_CREDENTIALS?=secrets/credentials.json
 gunicorn:
 	gunicorn -c src/gunicorn_conf.py src.app:app
 
+.PHONY: test
+test:
+	pytest -v -p no:warnings
+
 
 ### Docker build and register scope
 DOCKER_FILE=Dockerfile
