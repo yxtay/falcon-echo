@@ -7,8 +7,8 @@ GOOGLE_APPLICATION_CREDENTIALS?=secrets/credentials.json
 
 .PHONY: build
 build:
-	pip install -r requirements.txt
-	pip install -r requirements-test.txt
+	python -m pip install -r requirements.txt
+	python -m pip install -r requirements-test.txt
 
 .PHONY: test
 test:
