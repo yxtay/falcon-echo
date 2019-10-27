@@ -1,43 +1,57 @@
 steps:
+  # test
 - name: 'python:${_PYTHON_VERSION}'
   id: 'test'
   entrypoint: 'bash'
-  args:
-    - '-c'
-    - 'make build-test'
+  args: ['-c', 'make build-test']
 
+  # builder
 - name: 'gcr.io/cloud-builders/docker'
   id: 'pull-builder'
   entrypoint: 'bash'
-  args:
-    - '-c'
-    - 'docker pull gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder || exit 0'
+  args: ['-c', 'docker pull gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder || exit 0']
   waitFor: ['-']
 - name: 'gcr.io/cloud-builders/docker'
   id: 'build-builder'
-  args: ['build', '--target', 'builder', '--cache-from', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder', '-t', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder', '.']
+  args:
+    - 'build'
+    - '--target'
+    - 'builder'
+    - '--cache-from'
+    - 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder'
+    - '-t'
+    - 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder'
+    - '.'
   waitFor: ['pull-builder']
 - name: 'gcr.io/cloud-builders/docker'
   id: 'push-builder'
   args: ['push', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder']
-  waitFor: ['build-builder']
+  waitFor: ['build-builder', 'test']
 
+  # latest
 - name: 'gcr.io/cloud-builders/docker'
   id: 'pull-latest'
   entrypoint: 'bash'
-  args:
-  - '-c'
-  - 'docker pull gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest || exit 0'
+  args: ['-c', 'docker pull gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest || exit 0']
   waitFor: ['-']
 - name: 'gcr.io/cloud-builders/docker'
   id: 'build-latest'
-  args: ['build', '--cache-from', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder', '--cache-from', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest', '-t', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest', '.']
+  args:
+    - 'build'
+    - '--cache-from'
+    - 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder'
+    - '--cache-from'
+    - 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest'
+    - '-t'
+    - 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest'
+    - '.'
   waitFor: ['pull-latest', 'build-builder']
 - name: 'gcr.io/cloud-builders/docker'
   id: 'push-latest'
   args: ['push', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest']
-  waitFor: ['build-latest']
+  waitFor: ['build-latest', 'test']
 
+  # cloud-run
 - name: 'gcr.io/cloud-builders/gcloud'
   id: 'cloud-run-deploy'
   entrypoint: 'bash'
@@ -47,6 +61,7 @@ steps:
       [[ "${BRANCH_NAME}" == "master" ]] && beta run deploy ${_SERVICE_NAME} --image gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest --region us-central1 --platform managed --allow-unauthenticated
       [[ "${BRANCH_NAME}" != "master" ]] && exit 0
   waitFor: ['push-latest']
+
 timeout: '600s'
 substitutions:
   _PYTHON_VERSION: '3.7.4'
