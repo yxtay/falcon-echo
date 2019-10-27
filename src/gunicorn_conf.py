@@ -7,7 +7,7 @@ reload = True  # default: False
 loglevel = "error"
 
 # server socket
-port = os.getenv("PORT", 80)
+port = os.getenv("PORT", 8080)
 bind = [":{port}".format(port=port)]  # default: ['127.0.0.1:8000']
 backlog = 2048  # default: 2048
 

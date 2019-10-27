@@ -5,14 +5,21 @@ DOCKER_FILE=Dockerfile
 ENVIRONMENT?=dev
 GOOGLE_APPLICATION_CREDENTIALS?=secrets/credentials.json
 
-.PHONY: gunicorn
-gunicorn:
-	gunicorn -c src/gunicorn_conf.py src.app:app
+.PHONY: build
+build:
+	pip install -r requirements.txt
+	pip install -r requirements-test.txt
 
 .PHONY: test
 test:
 	pytest -v -p no:warnings
 
+.PHONY: build-test
+build-test: build test
+
+.PHONY: gunicorn
+gunicorn:
+	gunicorn -c src/gunicorn_conf.py src.app:app
 
 ### Docker build and register scope
 DOCKER_FILE=Dockerfile
@@ -27,9 +34,9 @@ docker-build:
 .PHONY: docker-run
 docker-run:
 	docker run --rm \
-	-p 8080:80 \
+	-p 80:8080 \
 	-e ENVIRONMENT=$(ENVIRONMENT) \
-	--mount type=bind,source=$(shell pwd)/secrets,target=/app/secrets \
+	--mount type=bind,source=$(shell pwd)/secrets,target=/home/appuser/secrets \
 	-e GOOGLE_APPLICATION_CREDENTIALS=$(GOOGLE_APPLICATION_CREDENTIALS) \
 	$(IMAGE_REGISTRY)/$(APP_NAME):latest \
 	$(ARGS)

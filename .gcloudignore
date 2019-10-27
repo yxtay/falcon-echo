@@ -133,3 +133,9 @@ dmypy.json
 
 secrets/
 .log*
+
+.git
+.gitignore
+.dockerignore
+.gcloudignore
+README.md
