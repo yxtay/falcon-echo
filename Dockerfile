@@ -19,7 +19,7 @@ WORKDIR $HOME
 ENV VIRTUAL_ENV $HOME/venv
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH $VIRTUAL_ENV/bin:$PATH
-RUN pip install -U pip
+RUN python -m pip install -U pip
 
 ##
 # builder
@@ -34,8 +34,8 @@ RUN apt-get update && apt-get install --no-install-recommends --yes \
 
 USER appuser
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt \
-    && pip freeze
+RUN python -m pip install --no-cache-dir -r requirements.txt \
+    && python -m pip freeze
 
 COPY configs configs
 COPY Makefile Makefile
