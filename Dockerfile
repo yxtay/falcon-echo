@@ -41,6 +41,21 @@ COPY configs configs
 COPY Makefile Makefile
 COPY src src
 
+ARG ENVIRONMENT=prod
+ENV ENVIRONMENT $ENVIRONMENT
+CMD ["make", "gunicorn"]
+
+##
+# tester
+##
+FROM builder as tester
+
+COPY requirements-test.txt .
+RUN pip install --no-cache-dir -r requirements-test.txt
+
+COPY tests tests
+CMD ["make", "test"]
+
 ##
 # app
 ##
@@ -49,5 +64,4 @@ COPY --from=builder $HOME $HOME
 
 ARG ENVIRONMENT=prod
 ENV ENVIRONMENT $ENVIRONMENT
-
 CMD ["make", "gunicorn"]
