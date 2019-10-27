@@ -46,17 +46,6 @@ ENV ENVIRONMENT $ENVIRONMENT
 CMD ["make", "gunicorn"]
 
 ##
-# tester
-##
-FROM builder as tester
-
-COPY requirements-test.txt .
-RUN pip install --no-cache-dir -r requirements-test.txt
-
-COPY tests tests
-CMD ["make", "test"]
-
-##
 # app
 ##
 FROM base AS app
