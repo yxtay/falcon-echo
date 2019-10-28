@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  build:
-    name: Master
+  check:
+    name: Checks
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -20,8 +20,17 @@ jobs:
     - name: Install dependencies
       run: make build
     - name: black
-      run: make black-diff
+      run: make black-check
     - name: flake8
       run: make flake8
     - name: pytest
       run: make pytest
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker build -t ${{ github.repository }}:latest .

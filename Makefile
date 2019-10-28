@@ -15,9 +15,9 @@ build:
 black:
 	black .
 
-.PHONY: black-diff
-black-diff:
-	black --diff .
+.PHONY: black-check
+black-check:
+	black --check --diff .
 
 .PHONY: flake8
 flake8:

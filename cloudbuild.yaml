@@ -7,7 +7,7 @@ steps:
 - name: 'python:${_PYTHON_VERSION}'
   id: 'black'
   entrypoint: 'bash'
-  args: ['-c', 'make black-diff']
+  args: ['-c', 'make black-check']
 - name: 'python:${_PYTHON_VERSION}'
   id: 'flake8'
   entrypoint: 'bash'
