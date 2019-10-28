@@ -30,7 +30,7 @@ class Request(object):
             "method": req.method,
             "headers": req.headers,
             "params": req.params,
-            "body": req.media or {}
+            "body": req.media or {},
         }
 
         with start_trace_span("[logger.info]"):

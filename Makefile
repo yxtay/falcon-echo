@@ -10,9 +10,17 @@ build:
 	python -m pip install -r requirements.txt
 	python -m pip install -r requirements-test.txt
 
-.PHONY: test
-test:
-	pytest -v -p no:warnings
+.PHONY: black
+black:
+	black .
+
+.PHONY: flake8
+flake8:
+	flake8
+
+.PHONY: pytest
+pytest:
+	pytest
 
 .PHONY: build-test
 build-test: build test

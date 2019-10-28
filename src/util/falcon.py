@@ -10,9 +10,7 @@ from src.util.tracer import start_trace_span, trace_function
 
 @trace_function
 def get_falcon_resp(resp, data={}):
-    body = {
-        "status": falcon.HTTP_200,
-    }
+    body = {"status": falcon.HTTP_200}
     body.update(data)
 
     with start_trace_span("[logger.info]"):

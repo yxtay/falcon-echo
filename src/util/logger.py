@@ -11,7 +11,10 @@ from src.config import APP_NAME, LOGGING_CONSOLE, LOGGING_FILE
 logging.basicConfig(handlers=[logging.NullHandler()])
 
 # formatter
-log_format = "%(asctime)s - %(levelname)s - %(name)s - %(filename)s - %(lineno)d - %(funcName)s - %(message)s"
+log_format = (
+    "%(asctime)s - %(levelname)s - %(name)s - %(filename)s - "
+    "%(lineno)d - %(funcName)s - %(message)s"
+)
 log_formatter = jsonlogger.JsonFormatter(fmt=log_format, timestamp=True)
 
 # stdout
@@ -44,9 +47,7 @@ def configure_handlers(console=LOGGING_CONSOLE, log_path=LOGGING_FILE):
     # rotating file handler
     if log_path:
         file_handler = RotatingFileHandler(
-            log_path,
-            maxBytes=10 * 2 ** 20,  # 10 MB
-            backupCount=1,  # 1 backup
+            log_path, maxBytes=10 * 2 ** 20, backupCount=1  # 10 MB  # 1 backup
         )
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(log_formatter)
