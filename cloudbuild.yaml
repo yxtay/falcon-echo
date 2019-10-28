@@ -1,21 +1,10 @@
 steps:
   # test
 - name: 'python:${_PYTHON_VERSION}'
-  id: 'build-env'
+  id: 'check'
   entrypoint: 'bash'
-  args: ['-c', 'make build']
-- name: 'python:${_PYTHON_VERSION}'
-  id: 'black'
-  entrypoint: 'bash'
-  args: ['-c', 'make black-check']
-- name: 'python:${_PYTHON_VERSION}'
-  id: 'flake8'
-  entrypoint: 'bash'
-  args: ['-c', 'make flake8']
-- name: 'python:${_PYTHON_VERSION}'
-  id: 'pytest'
-  entrypoint: 'bash'
-  args: ['-c', 'make pytest']
+  args: ['-c', 'make build && make black-check && make flake8 && make pytest']
+  waitFor: ['-']
 
   # builder
 - name: 'gcr.io/cloud-builders/docker'
@@ -38,14 +27,14 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'push-builder'
   args: ['push', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder']
-  waitFor: ['build-builder', 'test']
+  waitFor: ['build-builder', 'check']
 
   # latest
 - name: 'gcr.io/cloud-builders/docker'
   id: 'pull-latest'
   entrypoint: 'bash'
   args: ['-c', 'docker pull gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest || exit 0']
-  waitFor: ['-']
+  waitFor: ['pull-builder']
 - name: 'gcr.io/cloud-builders/docker'
   id: 'build-latest'
   args:
@@ -61,7 +50,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'push-latest'
   args: ['push', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest']
-  waitFor: ['build-latest', 'test']
+  waitFor: ['build-latest', 'check']
 
   # cloud-run
 - name: 'gcr.io/cloud-builders/gcloud'
