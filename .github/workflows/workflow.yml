@@ -1,4 +1,4 @@
-name: pytest
+name: CICD
 
 on: 
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: pytest
+    name: Master
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -18,9 +18,10 @@ jobs:
       with:
         python-version: 3.7.4
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        make build
-    - name: Test with pytest
-      run: |
-        make test
+      run: make build
+    - name: black
+      run: make black-diff
+    - name: flake8
+      run: make flake8
+    - name: pytest
+      run: make pytest

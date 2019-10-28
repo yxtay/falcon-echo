@@ -1,9 +1,21 @@
 steps:
   # test
 - name: 'python:${_PYTHON_VERSION}'
-  id: 'test'
+  id: 'build-env'
   entrypoint: 'bash'
-  args: ['-c', 'make build-test']
+  args: ['-c', 'make build']
+- name: 'python:${_PYTHON_VERSION}'
+  id: 'black'
+  entrypoint: 'bash'
+  args: ['-c', 'make black-diff']
+- name: 'python:${_PYTHON_VERSION}'
+  id: 'flake8'
+  entrypoint: 'bash'
+  args: ['-c', 'make flake8']
+- name: 'python:${_PYTHON_VERSION}'
+  id: 'pytest'
+  entrypoint: 'bash'
+  args: ['-c', 'make pytest']
 
   # builder
 - name: 'gcr.io/cloud-builders/docker'
