@@ -8,14 +8,28 @@ GOOGLE_APPLICATION_CREDENTIALS?=secrets/credentials.json
 .PHONY: build
 build:
 	python -m pip install -r requirements.txt
-	python -m pip install -r requirements-test.txt
+	python -m pip install -r requirements-dev.txt
+	python -m pip freeze
 
-.PHONY: test
-test:
-	pytest -v -p no:warnings
+.PHONY: black
+black:
+	black .
 
-.PHONY: build-test
-build-test: build test
+.PHONY: black-check
+black-check:
+	black --check --diff .
+
+.PHONY: flake8
+flake8:
+	flake8
+
+.PHONY: pytest
+pytest:
+	pytest
+
+.PHONY: pre-commit-run
+pre-commit-run:
+	pre-commit run
 
 .PHONY: gunicorn
 gunicorn:

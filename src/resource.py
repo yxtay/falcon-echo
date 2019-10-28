@@ -9,9 +9,7 @@ from src.util.tracer import init_tracer
 
 class HealthResource(object):
     def on_get(self, req, resp):
-        body = {
-            "status": falcon.HTTP_200,
-        }
+        body = {"status": falcon.HTTP_200}
         resp.body = json.dumps(body)
 
 

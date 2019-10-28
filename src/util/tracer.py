@@ -12,13 +12,9 @@ from src.config import GCP_PROJECT
 
 def init_tracer(project_id=GCP_PROJECT):
     exporter = stackdriver_exporter.StackdriverExporter(
-        project_id=project_id,
-        transport=AsyncTransport
+        project_id=project_id, transport=AsyncTransport
     )
-    tracer = Tracer(
-        sampler=samplers.AlwaysOnSampler(),
-        exporter=exporter,
-    )
+    tracer = Tracer(sampler=samplers.AlwaysOnSampler(), exporter=exporter)
     return tracer
 
 
