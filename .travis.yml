@@ -9,6 +9,9 @@ python: 3.7.4
 services:
   - docker
 
+env:
+  - CONTANIER_IMAGE=${TRAVIS_REPO_SLUG}
+
 before_install:
   - python -m pip install -U pip
 
@@ -19,7 +22,7 @@ script:
   - make black-check
   - make flake8
   - make pytest
-  - docker build -t ${TRAVIS_REPO_SLUG}:latest .
+  - docker build -t ${CONTANIER_IMAGE}:latest .
 
 notifications:
   email:

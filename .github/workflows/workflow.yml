@@ -26,4 +26,6 @@ jobs:
     - name: Run pytest
       run: make pytest
     - name: Build Docker image
-      run: docker build -t ${{ github.repository }}:latest .
+      env:
+        CONTAINER_IMAGE: ${GITHUB_REPOSITORY}
+      run: docker build -t ${CONTAINER_IMAGE}:latest .

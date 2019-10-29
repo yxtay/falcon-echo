@@ -135,8 +135,3 @@ secrets/
 .log*
 
 .git
-.gitignore
-.dockerignore
-.gcloudignore
-**/README.md
-**/Dockerfile

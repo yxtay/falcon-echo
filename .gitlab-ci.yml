@@ -1,0 +1,41 @@
+image: python:3.7.4
+
+stages:
+  - init
+  - test
+  - build
+
+init:
+  stage: init
+  script:
+    - python -m venv venv
+    - ./venv/bin/activate
+    - python -m pip install -r requirements.txt
+
+black:
+  stage: test
+  script:
+    - make black-check
+
+flake8:
+  stage: test
+  script:
+    - make flake8
+
+pytest:
+  stage: test
+  script:
+    - make pytest
+
+build-docker:
+  stage: build
+  image: docker:19.03.1
+  services:
+    - docker:19.03.1-dind
+  variables:
+    # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    CONTAINER_IMAGE: ${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}
+  script:
+    - docker build -t ${CONTAINER_IMAGE}:latest .
