@@ -19,18 +19,11 @@ jobs:
         python-version: 3.7.4
     - name: Install dependencies
       run: make build
-    - name: black
+    - name: Run black
       run: make black-check
-    - name: flake8
+    - name: Run flake8
       run: make flake8
-    - name: pytest
+    - name: Run pytest
       run: make pytest
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Build the Docker image
+    - name: Build Docker image
       run: docker build -t ${{ github.repository }}:latest .

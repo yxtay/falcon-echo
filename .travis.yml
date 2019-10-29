@@ -1,0 +1,27 @@
+branches:
+  only:
+  - master
+
+language: python
+dist: bionic
+python: 3.7.4
+
+services:
+  - docker
+
+before_install:
+  - python -m pip install -U pip
+
+install:
+  - make build
+
+script:
+  - make black-check
+  - make flake8
+  - make pytest
+  - docker build -t ${TRAVIS_REPO_SLUG}:latest .
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always

@@ -1,7 +1,7 @@
 steps:
   # test
 - name: 'python:${_PYTHON_VERSION}'
-  id: 'check'
+  id: 'checks'
   entrypoint: 'bash'
   args: ['-c', 'make build && make black-check && make flake8 && make pytest']
   waitFor: ['-']
@@ -27,7 +27,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'push-builder'
   args: ['push', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder']
-  waitFor: ['build-builder', 'check']
+  waitFor: ['build-builder', 'checks']
 
   # latest
 - name: 'gcr.io/cloud-builders/docker'
@@ -50,7 +50,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'push-latest'
   args: ['push', 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest']
-  waitFor: ['build-latest', 'check']
+  waitFor: ['build-latest', 'checks']
 
   # cloud-run
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -68,4 +68,5 @@ substitutions:
   _SERVICE_NAME: 'falcon-echo'
   _IMAGE_NAME: 'falcon-echo'
 images:
-  - 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}'
+  - 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest'
+  - 'gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:builder'
