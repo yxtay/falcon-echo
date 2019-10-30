@@ -22,7 +22,7 @@ script:
   - make black-check
   - make flake8
   - make pytest
-  - docker build -t ${CONTANIER_IMAGE}:latest .
+  - docker build -t ${CONTANIER_IMAGE} .
 
 notifications:
   email:

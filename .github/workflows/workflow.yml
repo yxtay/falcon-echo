@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python 3.7.4
       uses: actions/setup-python@v1
       with:
-        python-version: 3.7.4
+        python-version: 3.7
     - name: Install dependencies
       run: make build
     - name: Run black
@@ -27,5 +27,5 @@ jobs:
       run: make pytest
     - name: Build Docker image
       env:
-        CONTAINER_IMAGE: ${GITHUB_REPOSITORY}
-      run: docker build -t ${CONTAINER_IMAGE}:latest .
+        CONTAINER_IMAGE: ${{ github.repository }}
+      run: docker build -t $CONTAINER_IMAGE .

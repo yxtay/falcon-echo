@@ -17,7 +17,8 @@ black:
 
 .PHONY: black-check
 black-check:
-	black --check --diff .
+	black --check --diff src
+	black --check --diff tests
 
 .PHONY: flake8
 flake8:
