@@ -13,15 +13,18 @@ build:
 
 .PHONY: black
 black:
-	black .
+	black src
+	black tests
 
 .PHONY: black-check
 black-check:
-	black --check --diff .
+	black --check --diff src
+	black --check --diff tests
 
 .PHONY: flake8
 flake8:
-	flake8
+	flake8 src
+	flake8 tests
 
 .PHONY: pytest
 pytest:

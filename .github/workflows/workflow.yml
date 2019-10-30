@@ -1,4 +1,4 @@
-name: CICD
+name: CI
 
 on: 
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   check:
-    name: Checks
+    name: Test
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python 3.7.4
       uses: actions/setup-python@v1
       with:
-        python-version: 3.7.4
+        python-version: 3.7
     - name: Install dependencies
       run: make build
     - name: Run black
@@ -26,4 +26,6 @@ jobs:
     - name: Run pytest
       run: make pytest
     - name: Build Docker image
-      run: docker build -t ${{ github.repository }}:latest .
+      env:
+        CONTAINER_IMAGE: ${{ github.repository }}
+      run: docker build -t $CONTAINER_IMAGE .
