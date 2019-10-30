@@ -12,14 +12,16 @@ RUN apt-get update && apt-get install --no-install-recommends --yes \
 RUN groupadd -g 999 appuser && \
     useradd -r -u 999 -g appuser --create-home appuser
 USER appuser
-ENV HOME /home/appuser
+
+# set up environment
+ENV HOME=/home/appuser
+ENV VIRTUAL_ENV=$HOME/venv
+ENV PATH=$VIRTUAL_ENV/bin:$PATH
 WORKDIR $HOME
 
 # set up python
-ENV VIRTUAL_ENV $HOME/venv
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH $VIRTUAL_ENV/bin:$PATH
-RUN python -m pip install -U pip
+RUN python -m venv $VIRTUAL_ENV && \
+    python -m pip install -U pip
 
 ##
 # builder
@@ -30,12 +32,13 @@ USER root
 RUN apt-get update && apt-get install --no-install-recommends --yes \
     gcc \
     libc-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && \
+    rm -rf /var/lib/apt/lists/*
 
 USER appuser
 COPY requirements.txt .
-RUN python -m pip install --no-cache-dir -r requirements.txt \
-    && python -m pip freeze
+RUN python -m pip install --no-cache-dir -r requirements.txt && \
+    python -m pip freeze
 
 COPY configs configs
 COPY Makefile Makefile

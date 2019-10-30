@@ -1,4 +1,4 @@
-name: CICD
+name: CI
 
 on: 
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   check:
-    name: Checks
+    name: Test
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
