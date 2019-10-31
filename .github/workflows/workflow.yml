@@ -7,13 +7,13 @@ on:
   pull_request:
 
 jobs:
-  check:
+  test:
     name: Test
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Set up Python 3.7.4
+    - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
         python-version: 3.7
@@ -25,7 +25,15 @@ jobs:
       run: make flake8
     - name: Run pytest
       run: make pytest
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Build Docker image
       env:
         CONTAINER_IMAGE: ${{ github.repository }}
-      run: docker build -t $CONTAINER_IMAGE .
+      run: docker build -t ${CONTAINER_IMAGE} .
