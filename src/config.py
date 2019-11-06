@@ -16,11 +16,14 @@ def read_config(ini_file="app.ini"):
 
 
 CONFIG = read_config()
-
 APP_NAME = CONFIG["APP_NAME"]
+ENVIRONMENT = CONFIG["ENVIRONMENT"]
+
 GCP_PROJECT = CONFIG["GCP_PROJECT"]
+
 LOGGING_FILE = CONFIG["LOGGING_FILE"]
 LOGGING_CONSOLE = CONFIG.getboolean("LOGGING_CONSOLE")
+TRACE_SAMPLING_RATE = CONFIG.getfloat("TRACE_SAMPLING_RATE")
 
 if __name__ == "__main__":
     parser = ArgumentParser()

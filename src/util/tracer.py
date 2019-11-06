@@ -3,18 +3,23 @@ import inspect
 from contextlib import contextmanager
 
 from opencensus.common.transports.async_ import AsyncTransport
-from opencensus.ext.stackdriver import trace_exporter as stackdriver_exporter
+from opencensus.ext.stackdriver.trace_exporter import StackdriverExporter
 from opencensus.trace.execution_context import get_opencensus_tracer
+from opencensus.trace.file_exporter import FileExporter
 from opencensus.trace.tracer import Tracer, samplers
 
-from src.config import GCP_PROJECT
+from src.config import ENVIRONMENT, GCP_PROJECT, TRACE_SAMPLING_RATE
 
 
 def init_tracer(project_id=GCP_PROJECT):
-    exporter = stackdriver_exporter.StackdriverExporter(
-        project_id=project_id, transport=AsyncTransport
-    )
-    tracer = Tracer(sampler=samplers.AlwaysOnSampler(), exporter=exporter)
+    sampler = samplers.ProbabilitySampler(TRACE_SAMPLING_RATE)
+
+    if ENVIRONMENT in {"stg", "prod"}:
+        exporter = StackdriverExporter(project_id=project_id, transport=AsyncTransport)
+    else:
+        exporter = FileExporter(transport=AsyncTransport)
+
+    tracer = Tracer(sampler=sampler, exporter=exporter)
     return tracer
 
 
