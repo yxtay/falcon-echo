@@ -25,13 +25,8 @@ script:
   - make black-check
   - make flake8
   - make pytest
-
-before_deploy:
-  - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
-
-deploy:
-  provider: script
-  script: |
+  - |
+    echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
     docker pull ${CONTAINER_IMAGE_BUILDER} || exit 0
     docker build --target builder --cache-from ${CONTAINER_IMAGE_BUILDER} -t ${CONTAINER_IMAGE_BUILDER} .
     docker push ${CONTAINER_IMAGE_BUILDER}
