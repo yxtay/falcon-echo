@@ -24,10 +24,17 @@ build-docker:
   services:
     - docker:dind
   variables:
+    CONTAINER_IMAGE_BUILDER: ${DOCKER_USER}/${CI_PROJECT_NAME}:builder
+    CONTAINER_IMAGE_LATEST: ${DOCKER_USER}/${CI_PROJECT_NAME}:latest
     DOCKER_TLS_CERTDIR: "/certs"
-    CONTAINER_IMAGE: ${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}
   script:
-    - docker build -t ${CONTAINER_IMAGE} .
+    - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
+    - docker pull ${CONTAINER_IMAGE_BUILDER} || exit 0
+    - docker build --target builder --cache-from ${CONTAINER_IMAGE_BUILDER} -t ${CONTAINER_IMAGE_BUILDER} .
+    - docker push ${CONTAINER_IMAGE_BUILDER}
+    - docker pull ${CONTAINER_IMAGE_LATEST} || exit 0
+    - docker build --cache-from ${CONTAINER_IMAGE_BUILDER} --cache-from ${CONTAINER_IMAGE_LATEST} -t ${CONTAINER_IMAGE_LATEST} .
+    - docker push ${CONTAINER_IMAGE_LATEST}
   only:
     - master
     - merge_request
