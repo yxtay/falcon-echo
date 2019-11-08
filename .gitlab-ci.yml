@@ -24,9 +24,9 @@ build-docker:
   services:
     - docker:dind
   variables:
-    DOCKER_TLS_CERTDIR: "/certs"
     CONTAINER_IMAGE_BUILDER: ${DOCKER_USER}/${CI_PROJECT_NAME}:builder
     CONTAINER_IMAGE_LATEST: ${DOCKER_USER}/${CI_PROJECT_NAME}:latest
+    DOCKER_TLS_CERTDIR: "/certs"
   script:
     - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
     - docker pull ${CONTAINER_IMAGE_BUILDER} || exit 0

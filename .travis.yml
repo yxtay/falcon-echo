@@ -10,7 +10,10 @@ services:
   - docker
 
 env:
-  - CONTANIER_IMAGE=${TRAVIS_REPO_SLUG}
+  global:
+    - CONTAINER_IMAGE_BUILDER=${TRAVIS_REPO_SLUG}:builder
+    - CONTAINER_IMAGE_LATEST=${TRAVIS_REPO_SLUG}:latest
+    - DOCKER_USER=yxtay
 
 before_install:
   - python -m pip install -U pip
@@ -22,7 +25,19 @@ script:
   - make black-check
   - make flake8
   - make pytest
-  - docker build -t ${CONTANIER_IMAGE} .
+
+before_deploy:
+  - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
+
+deploy:
+  provider: script
+  script: |
+    docker pull ${CONTAINER_IMAGE_BUILDER} || exit 0
+    docker build --target builder --cache-from ${CONTAINER_IMAGE_BUILDER} -t ${CONTAINER_IMAGE_BUILDER} .
+    docker push ${CONTAINER_IMAGE_BUILDER}
+    docker pull ${CONTAINER_IMAGE_LATEST} || exit 0
+    docker build --cache-from ${CONTAINER_IMAGE_BUILDER} --cache-from ${CONTAINER_IMAGE_LATEST} -t ${CONTAINER_IMAGE_LATEST} .
+    docker push ${CONTAINER_IMAGE_LATEST}
 
 notifications:
   email:
