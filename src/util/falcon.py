@@ -5,7 +5,7 @@ import traceback
 import falcon
 
 from src.util.logger import logger
-from src.util.tracer import start_trace_span, trace_function
+from src.util.tracer import init_tracer, start_trace_span, trace_function
 
 
 @trace_function
@@ -32,6 +32,18 @@ def get_error_resp(resp, exception):
         "traceback": traceback.format_exc().strip().split("\n"),
     }
     return get_falcon_resp(resp, body)
+
+
+def add_trace_init(func):
+    @functools.wraps(func)
+    def wrapper(self, req, resp, *args, **kwargs):
+        tracer = init_tracer()
+        with tracer.span(req.uri):
+            func(self, req, resp, *args, **kwargs)
+
+        tracer.finish()
+
+    return wrapper
 
 
 def add_exception_handling(func):

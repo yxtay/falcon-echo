@@ -36,7 +36,7 @@ pre-commit-run:
 
 .PHONY: gunicorn
 gunicorn:
-	gunicorn -c src/gunicorn_conf.py src.app:app
+	GOOGLE_APPLICATION_CREDENTIALS=$(GOOGLE_APPLICATION_CREDENTIALS) gunicorn -c src/gunicorn_conf.py src.app:app
 
 ### Docker build and register scope
 DOCKER_FILE=Dockerfile

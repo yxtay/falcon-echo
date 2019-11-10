@@ -12,7 +12,7 @@ def create_falcon_app():
     app.add_route("/health", resource.HealthResource())
     app.add_route("/hello", resource.HelloResource())
     app.add_route("/echo", resource.EchoResource())
-    app.add_route("/auth_echo", resource.EchoResource())
+    app.add_route("/parallelise", resource.ParalleliseResource())
     return app
 
 
