@@ -39,5 +39,6 @@ class ParalleliseResource(object):
     def on_get(self, req, resp):
         num = req.get_param_as_int("num", default=3)
         delay = req.get_param_as_float("delay", default=1.0)
+
         multi_sleep(num, delay)
         falcon_util.get_falcon_resp(resp)

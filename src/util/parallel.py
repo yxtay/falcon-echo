@@ -1,7 +1,7 @@
 import functools
-import threading
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from multiprocessing import Process
+from threading import Thread
 
 
 def parallelise(func=None, is_multiprocess=False):
@@ -23,7 +23,7 @@ def parallelise(func=None, is_multiprocess=False):
 def multithread(func):
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
-        thread = threading.Thread(target=func, args=args, kwargs=kwargs)
+        thread = Thread(target=func, args=args, kwargs=kwargs)
         thread.start()
         return thread
 
