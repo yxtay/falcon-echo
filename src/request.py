@@ -1,5 +1,5 @@
-from src.util.logger import logger
-from src.util.tracer import start_trace_span, trace_function
+from src.utils.logger import logger
+from src.utils.tracer import start_trace_span, trace_function
 
 
 class Request(object):

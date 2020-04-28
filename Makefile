@@ -51,7 +51,7 @@ docker-build:
 .PHONY: docker-run
 docker-run:
 	docker run --rm \
-	-p 80:8080 \
+	-p 8080:8080 \
 	-e ENVIRONMENT=$(ENVIRONMENT) \
 	--mount type=bind,source=$(shell pwd)/secrets,target=/home/appuser/secrets \
 	-e GOOGLE_APPLICATION_CREDENTIALS=$(GOOGLE_APPLICATION_CREDENTIALS) \

@@ -4,8 +4,8 @@ import traceback
 
 import falcon
 
-from src.util.logger import logger
-from src.util.tracer import init_tracer, start_trace_span, trace_function
+from src.utils.logger import logger
+from src.utils.tracer import init_tracer, start_trace_span, trace_function
 
 
 @trace_function

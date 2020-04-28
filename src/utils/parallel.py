@@ -12,7 +12,7 @@ def parallelise(func=None, is_multiprocess=False):
 
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
-        executor = PoolExecutor(max_workers=1)
+        executor = PoolExecutor()
         task = executor.submit(func, *args, **kwargs)
         executor.shutdown(wait=False)
         return task

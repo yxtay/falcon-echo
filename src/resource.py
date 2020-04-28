@@ -4,7 +4,7 @@ import falcon
 
 from src.misc import multi_sleep
 from src.request import Request
-from src.util import falcon as falcon_util
+from src.utils import falcon as falcon_util
 
 
 class HealthResource(object):
