@@ -3,4 +3,5 @@ gunicorn==19.9.*
 falcon==2.0.*
 meinheld==1.0.*
 opencensus-ext-stackdriver==0.7.*
+opencensus-ext-threading==0.1.*
 python-json-logger==0.1.*

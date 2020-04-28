@@ -4,6 +4,7 @@ from contextlib import contextmanager
 
 from opencensus.common.transports.async_ import AsyncTransport
 from opencensus.ext.stackdriver.trace_exporter import StackdriverExporter
+from opencensus.ext.threading import trace
 from opencensus.trace.execution_context import get_opencensus_tracer
 from opencensus.trace.file_exporter import FileExporter
 from opencensus.trace.tracer import Tracer, samplers
@@ -20,6 +21,7 @@ def init_tracer(project_id=GCP_PROJECT):
         exporter = FileExporter(transport=AsyncTransport)
 
     tracer = Tracer(sampler=sampler, exporter=exporter)
+    trace.trace_integration()
     return tracer
 
 

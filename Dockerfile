@@ -1,7 +1,7 @@
 ##
 # base
 ##
-FROM python:3.7.4-slim AS base
+FROM python:3.7.6-slim AS base
 MAINTAINER wyextay@gmail.com
 
 RUN apt-get update && apt-get install --no-install-recommends --yes \
@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install --no-install-recommends --yes \
 # set up user
 RUN groupadd -g 999 appuser && \
     useradd -r -u 999 -g appuser --create-home appuser
-USER appuser
 
 # set up environment
 ENV HOME=/home/appuser
@@ -21,21 +20,19 @@ WORKDIR $HOME
 
 # set up python
 RUN python -m venv $VIRTUAL_ENV && \
-    python -m pip install -U pip
+    python -m pip install --no-cache-dir --upgrade pip
 
 ##
 # builder
 ##
 FROM base as builder
-
 USER root
+
 RUN apt-get update && apt-get install --no-install-recommends --yes \
     gcc \
     libc-dev \
-    && \
-    rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
-USER appuser
 COPY requirements.txt .
 RUN python -m pip install --no-cache-dir -r requirements.txt && \
     python -m pip freeze
@@ -52,8 +49,10 @@ CMD ["make", "gunicorn"]
 # app
 ##
 FROM base AS app
-COPY --from=builder $HOME $HOME
+USER appuser
+
+COPY --from=builder --chown=appuser:appuser $HOME $HOME
 
 ARG ENVIRONMENT=prod
-ENV ENVIRONMENT $ENVIRONMENT
+ENV ENVIRONMENT=$ENVIRONMENT
 CMD ["make", "gunicorn"]
